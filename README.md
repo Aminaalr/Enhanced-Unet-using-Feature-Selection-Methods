@@ -1,4 +1,4 @@
-# Enhanced-Unet-using-Feature-Selection-Methods
+# Enhanced-Unet-using advanced Feature-Selection-Methods
 **Objective:**
 
 This code aims to enhance the classification of a large bone marrow cell dataset by utilizing an improved U-Net architecture. The goal is to achieve a dual improvement: increasing classification accuracy and reducing computational time. This optimization is attained by incorporating an advanced feature selection method, which effectively identifies the most pertinent features from the dataset, resulting in more efficient and accurate classification.
