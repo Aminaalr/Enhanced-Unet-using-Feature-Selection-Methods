@@ -65,7 +65,7 @@ def maskImages():
                     inv_mask=cv2.bitwise_not(grey_image)
 
                     # normalize the binary image
-                    mask_binary_image = cv2.normalize(inv_mask, None, 0, 256,cv2.NORM_MINMAX, dtype=cv2.CV_8U) 
+                    mask_binary_image = cv2.normalize(inv_mask, None, 0, 1,cv2.NORM_MINMAX, dtype=cv2.CV_8U) 
                     
                     #save ImageFile
                     cv2.imwrite(filename.replace(dirPath, maskPath),  mask_binary_image)                    
