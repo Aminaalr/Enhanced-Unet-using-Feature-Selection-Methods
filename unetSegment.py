@@ -86,13 +86,12 @@ def loadDataset():
     maskArr = np.array(maskArr)    
     return imgArr, maskArr, nameArr
     
-#Performance Matrics    
-def performance_metrics(cnf_matrix,class_names):
-    #Confusion Matrix Plot
+def performance_metrics(cnf_matrix, class_names):
+    # Confusion Matrix Plot
     cmd = ConfusionMatrixDisplay(cnf_matrix, display_labels=class_names)
-    cmd.plot(cmap = 'Greens')
+    cmd.plot(cmap='Greens')
     cmd.ax_.set(xlabel='Predicted', ylabel='Actual')
-    #Find All Parameters
+    # Find All Parameters
     FP = cnf_matrix.sum(axis=0) - np.diag(cnf_matrix)
     FN = cnf_matrix.sum(axis=1) - np.diag(cnf_matrix)
     TP = np.diag(cnf_matrix)
@@ -102,26 +101,32 @@ def performance_metrics(cnf_matrix,class_names):
     TP = TP.astype(float)
     TN = TN.astype(float)
     # Sensitivity, hit rate, recall, or true positive rate
-    TPR = TP/(TP+FN)
+    TPR = TP / (TP + FN)
     # Specificity or true negative rate
-    TNR = TN/(TN+FP)
+    TNR = TN / (TN + FP)
     # Precision or positive predictive value
-    PPV = TP/(TP+FP)
+    PPV = TP / (TP + FP)
     # Negative predictive value
-    NPV = TN/(TN+FN)
+    NPV = TN / (TN + FN)
     # Fall out or false positive rate
-    FPR = FP/(FP+TN)
+    FPR = FP / (FP + TN)
     # False negative rate
-    FNR = FN/(TP+FN)
+    FNR = FN / (TP + FN)
     # False discovery rate
-    FDR = FP/(TP+FP)
+    FDR = FP / (TP + FP)
     # F1-Score accuracy for each class
     FScore = 2 * (PPV * TPR) / (PPV + TPR)
     # Overall accuracy for each class
-    ACC = (TP+TN)/(TP+FP+TN+FN)
-    print('\n\nClassName\tTP\t\tFP\tFN\tTN\tPrecision\tSensitivity\tSpecificity\tF-Score\t\tAccuracy')
+    ACC = (TP + TN) / (TP + FP + TN + FN)
+    # Intersection over Union (IoU) for each class
+    IoU = TP / (TP + FP + FN)
+    
+    print('\n\nClassName\tTP\t\tFP\tFN\tTN\tPrecision\tSensitivity\tSpecificity\tF-Score\t\tAccuracy\t\tIoU')
     for i in range(len(class_names)):
-        print(class_names[i]+"\t\t{0:.0f}".format(TP[i])+"\t{0:.0f}".format(FP[i])+"\t{0:.0f}".format(FN[i])+"\t{0:.0f}".format(TN[i])+"\t{0:.4f}".format(PPV[i])+"\t\t{0:.4f}".format(TPR[i])+"\t\t{0:.4f}".format(TNR[i])+"\t\t{0:.4f}".format(FScore[i])+"\t\t{0:.4f}".format(ACC[i]))
+        print(class_names[i] + "\t\t{0:.0f}".format(TP[i]) + "\t{0:.0f}".format(FP[i]) + "\t{0:.0f}".format(
+            FN[i]) + "\t{0:.0f}".format(TN[i]) + "\t{0:.4f}".format(PPV[i]) + "\t\t{0:.4f}".format(
+            TPR[i]) + "\t\t{0:.4f}".format(TNR[i]) + "\t\t{0:.4f}".format(FScore[i]) + "\t\t{0:.4f}".format(
+            ACC[i]) + "\t\t{0:.4f}".format(IoU[i]))
 
 def unetModel():
     #Build the model
@@ -208,26 +213,27 @@ model.summary()
 
 model_checkpoint = ModelCheckpoint("weights/best.hdf5", monitor='loss',verbose=1)
 model.fit(x_train, y_train, validation_data=(x_test,y_test), batch_size=100, epochs=no_epochs, callbacks=[model_checkpoint])
-loss = model.history.history['loss']
-val_loss = model.history.history['val_loss']
-plt.figure()
-plt.plot( loss, label='Training loss')
-plt.plot( val_loss, label='Validation loss')
-plt.title('Training and Validation Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss Value')
-plt.ylim([0, 1])
-plt.legend()
-plt.show()
+# Plot training and validation accuracy
 accuracy = model.history.history['accuracy']
 val_accuracy = model.history.history['val_accuracy']
 plt.figure()
-plt.plot( accuracy, label='Training accuracy')
-plt.plot( val_accuracy, label='Validation accuracy')
-plt.title('Training and Validation accuracy')
+plt.plot(accuracy, label='Training Accuracy')
+plt.plot(val_accuracy, label='Validation Accuracy')
+plt.title('Training and Validation Accuracy')
 plt.xlabel('Epoch')
-plt.ylabel('Loss Value')
-plt.ylim([0, 1])
+plt.ylabel('Accuracy')
+plt.legend()
+plt.show()
+
+# Plot training and validation loss
+loss = model.history.history['loss']
+val_loss = model.history.history['val_loss']
+plt.figure()
+plt.plot(loss, label='Training Loss')
+plt.plot(val_loss, label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
 plt.legend()
 plt.show()
 
